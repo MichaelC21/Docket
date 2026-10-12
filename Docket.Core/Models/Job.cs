@@ -1,5 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Docket.Core.Enums;
 
 namespace Docket.Core.Models;
@@ -7,13 +7,14 @@ namespace Docket.Core.Models;
 public class Job
 {
     [Key]
-    public required string JobID {get; set;}
-    public required string Handler {get; set;}
-    public required string Payload {get; set;}
-    public JobStatus JobStatus {get; set;}
-    public int Attempted {get; set;}
-    public int MaxAttempts {get; set;}
-    public DateTime NextRunUTC {get; set;}
-    public DateTime CreatedAtUTC {get; set;}
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid JobID {get; private set;}
+    public string Handler {get; private set;} = string.Empty;
+    public string Payload {get; private set;}= string.Empty;
+    public JobStatus Status {get; private set;}
+    public int Attempted {get; private set;}
+    public int MaxAttempts {get; private set;}
+    public DateTimeOffset NextRunUTC {get; private set;}
+    public DateTimeOffset CreatedAtUTC {get; private set;}
 
 }

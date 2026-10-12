@@ -2,8 +2,9 @@ namespace Docket.Core.Enums;
 
 public enum JobStatus
 {
-    Queued = 1,
-    Running = 2,
-    Success = 3,
-    Fail = 4
+    Queued = 0,
+    Running = 1,
+    Success = 2,
+    Fail = 3,
+    DeadLetter = 4,
 }

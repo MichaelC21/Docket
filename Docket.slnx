@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Docket.Persistence/Docket.Persistence.csproj" />
+  <Project Path="Docket.Test/Docket.Test.csproj" />
+  <Project Path="Docket.Web/Docket.Web.csproj" />
+  <Project Path="Docket.Worker/Docket.Worker.csproj" />
+  <Project Path="Docket.Core/Docket.Core.csproj" />
+</Solution>

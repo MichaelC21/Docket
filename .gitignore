@@ -7,6 +7,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+#Visual Studio
+.vs/
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -22,11 +24,14 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+bin/
+obj/
 
 # .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
+*.user
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
@@ -55,3 +60,6 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Claude
+.claude/

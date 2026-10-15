@@ -19,8 +19,8 @@ namespace Docket.Persistence.Migrations
                     Handler = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Payload = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    Attempted = table.Column<int>(type: "int", nullable: false, defaultValue: 3),
-                    MaxAttempts = table.Column<int>(type: "int", nullable: false),
+                    Attempted = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    MaxAttempts = table.Column<int>(type: "int", nullable: false, defaultValue: 3),
                     NextRunUTC = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedAtUTC = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },

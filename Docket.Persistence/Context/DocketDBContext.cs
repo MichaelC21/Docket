@@ -36,7 +36,7 @@ namespace Docket.Persistence.Context
                     .IsRequired()
                     .HasDefaultValue(0);
 
-                builder.Property(j => j.Attempted)
+                builder.Property(j => j.MaxAttempts)
                     .IsRequired()
                     .HasDefaultValue(3);
                 

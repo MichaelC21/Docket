@@ -1,4 +1,5 @@
 using Docket.Core.Entities;
+using Docket.Core.Enums;
 using Docket.Persistence.Context;
 using DotNetEnv;
 using FluentAssertions;
@@ -53,11 +54,20 @@ namespace Docket.Tests.Integration
             context.SaveChanges();
 
             // Assert
-            Job? savedJob = context.Jobs.FirstOrDefault(j => j.JobID == job.JobID);
+            using var context2 = _db.CreateContext();
+
+            Job? savedJob = context2.Jobs.FirstOrDefault(j => j.JobID == job.JobID);
 
             savedJob.Should().NotBeNull();
-            savedJob.Handler.Should().Be("TestHandler");
-            savedJob.Payload.Should().Be("{\"message\":\"hello\"}");
+            savedJob.JobID.Should().Be(job.JobID);
+            savedJob.Handler.Should().Be(job.Handler);
+            savedJob.Payload.Should().Be(job.Payload);
+            savedJob.Status.Should().Be(job.Status);
+            savedJob.Attempted.Should().Be(job.Attempted);
+            savedJob.MaxAttempts.Should().Be(job.MaxAttempts);
+            savedJob.NextRunUTC.Should().Be(job.NextRunUTC);
+            savedJob.CreatedAtUTC.Should().Be(job.CreatedAtUTC);
+
         }
     }
 }

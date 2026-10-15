@@ -31,7 +31,7 @@ namespace Docket.Persistence.Migrations
                     b.Property<int>("Attempted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(3);
+                        .HasDefaultValue(0);
 
                     b.Property<DateTimeOffset>("CreatedAtUTC")
                         .HasColumnType("datetimeoffset");
@@ -42,7 +42,9 @@ namespace Docket.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("MaxAttempts")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(3);
 
                     b.Property<DateTimeOffset>("NextRunUTC")
                         .HasColumnType("datetimeoffset");

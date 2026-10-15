@@ -10,16 +10,15 @@ namespace Docket.Web.Health;
 
 public class DatabaseHealthCheck : IHealthCheck
 {
+    private DocketDBContext _db;
+    public DatabaseHealthCheck(DocketDBContext dbContext)
+    {
+        _db = dbContext;
+    }
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        Env.TraversePath().Load();
-        var connectionString = Environment.GetEnvironmentVariable("DOCKET_CONNECTION_STRING") ?? "";
-
-        DocketDBContext db = new DocketDBContext(new DbContextOptionsBuilder<DocketDBContext>()
-                .UseSqlServer(connectionString)
-                .Options);
-        
-        bool healthy = db.Database.CanConnect();
+      
+        bool healthy = _db.Database.CanConnect();
 
         if (healthy)
         {

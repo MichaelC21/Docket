@@ -14,7 +14,12 @@ namespace Docket.Tests.Integration
         public DbFixture()
         {
             Env.TraversePath().Load();
-            ConnectionString = Environment.GetEnvironmentVariable("DOCKET_TEST_CONNECTION_STRING") ?? "";
+            ConnectionString = Environment.GetEnvironmentVariable("DOCKET_TEST_CONNECTION_STRING")!;
+
+            if (String.IsNullOrEmpty(ConnectionString))
+            {
+                throw new InvalidOperationException("Test connection string is not set");
+            }
 
             using var context = CreateContext();
             context.Database.Migrate();

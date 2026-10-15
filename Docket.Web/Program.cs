@@ -13,8 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-Env.TraversePath().Load();
-var connectionString = Environment.GetEnvironmentVariable("DOCKET_CONNECTION_STRING") ?? "";
+var connectionString = Environment.GetEnvironmentVariable("DOCKET_CONNECTION_STRING");
+
+if (String.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string is not set");
+}
+
 builder.Services.AddDbContext<DocketDBContext>(options =>
     options.UseSqlServer(connectionString));
 

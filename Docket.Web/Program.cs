@@ -56,17 +56,19 @@ app.MapHealthChecks("/readyz", new HealthCheckOptions
 
 app.MapPost("/api/enqueue", async (EnqueueRequest request, DocketDBContext db) =>
 {
-    if (String.IsNullOrEmpty(request.handler))
+    if (String.IsNullOrEmpty(request.Handler))
     {
         return Results.BadRequest("handler is required");
     }
 
-    Job job = new Job(request.handler, request.payload ?? "");
+    Job job = new Job(request.Handler, request.Payload ?? "");
     await db.Jobs.AddAsync(job);
 
     var rowsChanged = await db.SaveChangesAsync();
 
-    return rowsChanged <= 0 ? Results.Problem("Failed to save job") : Results.Ok(job.JobID.ToString());
+    return rowsChanged <= 0
+        ? Results.Problem("Failed to save job")
+        : Results.Created($"/api/jobs/{job.JobID}", job.JobID.ToString());
 });
 
 app.UseHttpsRedirection();

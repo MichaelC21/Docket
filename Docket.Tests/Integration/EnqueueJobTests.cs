@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http.Json;
 using Docket.Core.Entities;
 using Docket.Tests.Fixtures;
@@ -25,20 +26,20 @@ public class EnqueueJobTests : IClassFixture<DbFixture>, IClassFixture<DocketWeb
         var request = new EnqueueRequest("TestHandler", "{\"message\":\"hello\"}");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/enqueue", request);
+        var response = await _client.PostAsJsonAsync("/api/enqueue", request, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        response.IsSuccessStatusCode.Should().BeTrue();
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        var jobIdText = (await response.Content.ReadAsStringAsync()).Trim('"');
+        var jobIdText = (await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)).Trim('"');
         Guid.TryParse(jobIdText, out var jobId).Should().BeTrue();
 
         using var context = _db.CreateContext();
         var savedJob = context.Jobs.FirstOrDefault(j => j.JobID == jobId);
 
         savedJob.Should().NotBeNull();
-        savedJob!.Handler.Should().Be(request.handler);
-        savedJob.Payload.Should().Be(request.payload);
+        savedJob!.Handler.Should().Be(request.Handler);
+        savedJob.Payload.Should().Be(request.Payload);
     }
 
     [Fact]
@@ -48,9 +49,9 @@ public class EnqueueJobTests : IClassFixture<DbFixture>, IClassFixture<DocketWeb
         var request = new EnqueueRequest("", "{\"message\":\"hello\"}");
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/enqueue", request);
+        var response = await _client.PostAsJsonAsync("/api/enqueue", request, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
-        response.IsSuccessStatusCode.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 }

@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Docket.Core\Docket.Core.csproj" />
     <ProjectReference Include="..\Docket.Persistence\Docket.Persistence.csproj" />
+    <ProjectReference Include="..\Docket.Web\Docket.Web.csproj" />
   </ItemGroup>
 
 </Project>

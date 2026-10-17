@@ -11,6 +11,10 @@ using NLog.Extensions.Logging;
 Env.NoClobber().TraversePath().Load();
 var connectionString = Environment.GetEnvironmentVariable("DOCKET_CONNECTION_STRING");
 
+if (String.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Connection string is not set");
+}
 
 var builder = Host.CreateApplicationBuilder(args);
 

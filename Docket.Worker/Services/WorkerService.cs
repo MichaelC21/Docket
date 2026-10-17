@@ -8,18 +8,14 @@ namespace Docket.Worker.Services;
 
 public class WorkerService : BackgroundService
 {
-    private TimeSpan timeout = TimeSpan.FromSeconds(5);
-
-    private ILogger<WorkerService> _logger;
-    private DocketDBContext _db;
-    
-    public WorkerService(ILogger<WorkerService> logger, DocketDBContext db, IConfiguration configuration)
+    private TimeSpan poll = TimeSpan.FromMilliseconds(5000);
+    private ILogger<WorkerService> _logger;    
+    public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration)
     {
         _logger = logger;
-        _db = db;
 
         var pollInterval = configuration.GetValue<int>("Worker:PollInterval");
-        timeout = TimeSpan.FromMilliseconds(pollInterval);
+        poll = pollInterval <= 0 ?  poll : TimeSpan.FromMilliseconds(pollInterval);
     }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -27,8 +23,8 @@ public class WorkerService : BackgroundService
         {
             try
             {
-                _logger.LogInformation($"{DateTime.Now}: Worker polling");
-                await Task.Delay(timeout, cancellationToken);
+                _logger.LogInformation($"Worker: polling");
+                await Task.Delay(poll, cancellationToken);
             }
             catch (OperationCanceledException)
             {
@@ -36,7 +32,7 @@ public class WorkerService : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{DateTime.Now}: Error: {ex.Message}");
+                _logger.LogError(ex, $"Worker: {ex.Message}");
             }
 
         }

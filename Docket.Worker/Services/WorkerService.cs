@@ -14,6 +14,7 @@ public class WorkerService : BackgroundService
     private ILogger<WorkerService> _logger;    
     private IJobService _jobService;
     private IServiceScopeFactory _serviceScopeFactory;
+    private string workerIdentity;
     public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration, IJobService jobService, IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
@@ -22,6 +23,7 @@ public class WorkerService : BackgroundService
 
         var pollInterval = configuration.GetValue<int>("Worker:PollInterval");
         poll = pollInterval <= 0 ?  poll : TimeSpan.FromMilliseconds(pollInterval);
+        workerIdentity = $"{Environment.MachineName}-{Environment.ProcessId}-{Guid.NewGuid()}";
     }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -34,11 +36,11 @@ public class WorkerService : BackgroundService
                 {           
                     var context = scope.ServiceProvider.GetRequiredService<DocketDBContext>();         
                     var job = await _jobService.AcquireJob(context, cancellationToken);
-
                     if(job != null)
                     {
-                        _logger.LogInformation($"Acquired: {job.JobID.ToString()}");
-                        //Process
+                        job.ClaimedBy = workerIdentity;
+                        job.ClaimedAt = DateTimeOffset.UtcNow;
+                        context.SaveChanges();
                         continue;
                     }
                     

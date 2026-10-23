@@ -12,6 +12,8 @@ public class Job
     public int MaxAttempts {get; private set;}
     public DateTimeOffset NextRunUTC {get; private set;}
     public DateTimeOffset CreatedAtUTC {get; private set;}
+    public string? ClaimedBy {get; set;}
+    public DateTimeOffset? ClaimedAt {get; set;}
 
     public Job(string handler, string payload, int maxAttempts = 3)
     {

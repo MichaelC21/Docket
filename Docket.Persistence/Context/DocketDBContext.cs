@@ -39,6 +39,9 @@ namespace Docket.Persistence.Context
                 builder.Property(j => j.MaxAttempts)
                     .IsRequired()
                     .HasDefaultValue(3);
+
+                builder.Property(j =>  j.ClaimedBy)
+                    .HasMaxLength(250);
                 
             });
                 

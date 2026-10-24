@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Docket.Persistence.Migrations
 {
-    /// <inheritdoc />
-    public partial class AddCreatedByAndCreatedAtColumns : Migration
+    public partial class AddClaimedByAndClaimedAtColumns : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTimeOffset>(

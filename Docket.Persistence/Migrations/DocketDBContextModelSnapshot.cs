@@ -68,6 +68,8 @@ namespace Docket.Persistence.Migrations
 
                     b.HasKey("JobID");
 
+                    b.HasIndex("Status", "NextRunUTC", "CreatedAtUTC");
+
                     b.ToTable("Jobs");
                 });
 #pragma warning restore 612, 618

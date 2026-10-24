@@ -42,6 +42,8 @@ namespace Docket.Persistence.Context
 
                 builder.Property(j =>  j.ClaimedBy)
                     .HasMaxLength(250);
+
+                builder.HasIndex(j => new { j.Status, j.NextRunUTC, j.CreatedAtUTC });
                 
             });
                 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Docket.Persistence.Migrations
 {
     [DbContext(typeof(DocketDBContext))]
-    [Migration("20261023042544_AddCreatedByAndCreatedAtColumns")]
-    partial class AddCreatedByAndCreatedAtColumns
+    [Migration("20261023042544_AddClaimedByAndClaimedAtColumns")]
+    partial class AddClaimedByAndClaimedAtColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

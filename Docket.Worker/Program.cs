@@ -1,6 +1,5 @@
 ﻿using Docket.Persistence.Context;
 using Docket.Worker.Services;
-using Docket.Worker.Services;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +20,8 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddNLog();
-builder.Services.AddSingleton<IJobService, JobService>();
+
+builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddDbContext<DocketDBContext>(options =>
 {
     options.UseSqlServer(connectionString);

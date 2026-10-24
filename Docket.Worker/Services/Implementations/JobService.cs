@@ -1,17 +1,22 @@
-using System;
 using Docket.Core.Entities;
 using Docket.Core.Enums;
 using Docket.Persistence.Context;
-using Docket.Worker.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Docket.Worker.Services;
 
 public class JobService : IJobService
 {
-    public async Task<Job?> AcquireJob(DocketDBContext context, CancellationToken token = default)
+    private readonly DocketDBContext _context;
+
+    public JobService(DocketDBContext context)
     {
-       var job = await context.Jobs.FromSql($"""
+        _context = context;
+    }
+
+    public async Task<Job?> AcquireJob(string workerIdentity, CancellationToken token = default)
+    {
+        var jobs = await _context.Jobs.FromSql($"""
                 WITH job AS (
                     SELECT TOP (1) *
                     FROM dbo.Jobs j WITH (UPDLOCK, READPAST, ROWLOCK)
@@ -20,11 +25,12 @@ public class JobService : IJobService
                 )
                 UPDATE job
                 SET Status = {JobStatus.Running},
-                    Attempted = Attempted + 1  
-
+                    Attempted = Attempted + 1,
+                    ClaimedBy = {workerIdentity},
+                    ClaimedAt = SYSDATETIMEOFFSET()
                 OUTPUT inserted.*;
         """).ToListAsync(token);
 
-        return job.FirstOrDefault();
+        return jobs.FirstOrDefault();
     }
 }

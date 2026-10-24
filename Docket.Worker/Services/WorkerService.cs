@@ -1,5 +1,3 @@
-using Docket.Persistence.Context;
-using Docket.Worker.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,14 +9,12 @@ namespace Docket.Worker.Services;
 public class WorkerService : BackgroundService
 {
     private TimeSpan poll = TimeSpan.FromMilliseconds(5000);
-    private ILogger<WorkerService> _logger;    
-    private IJobService _jobService;
+    private ILogger<WorkerService> _logger;
     private IServiceScopeFactory _serviceScopeFactory;
     private string workerIdentity;
-    public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration, IJobService jobService, IServiceScopeFactory serviceScopeFactory)
+    public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
-        _jobService = jobService;
         _serviceScopeFactory = serviceScopeFactory;
 
         var pollInterval = configuration.GetValue<int>("Worker:PollInterval");
@@ -29,32 +25,35 @@ public class WorkerService : BackgroundService
     {
         while (!cancellationToken.IsCancellationRequested)
         {
-            await using (var scope = _serviceScopeFactory.CreateAsyncScope())
+            try
             {
-                _logger.LogInformation($"Worker: polling");
+                await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+                var job = await jobService.AcquireJob(workerIdentity, cancellationToken);
+                if (job != null)
+                {
+                    _logger.LogInformation("Worker: claimed job {JobId}", job.JobID);
+                    continue;
+                }
+
+                _logger.LogInformation("Worker: no job found");
+                await Task.Delay(poll, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Worker: {Message}", ex.Message);
                 try
-                {           
-                    var context = scope.ServiceProvider.GetRequiredService<DocketDBContext>();         
-                    var job = await _jobService.AcquireJob(context, cancellationToken);
-                    if(job != null)
-                    {
-                        job.ClaimedBy = workerIdentity;
-                        job.ClaimedAt = DateTimeOffset.UtcNow;
-                        context.SaveChanges();
-                        continue;
-                    }
-                    
-                    _logger.LogInformation("No job found");                    
+                {
+                    await Task.Delay(poll, cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
                     break;
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"Worker: {ex.Message}");
-                }              
-                await Task.Delay(poll, cancellationToken); 
             }
         }
     }

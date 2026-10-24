@@ -33,6 +33,13 @@ namespace Docket.Persistence.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<DateTimeOffset?>("ClaimedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ClaimedBy")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<DateTimeOffset>("CreatedAtUTC")
                         .HasColumnType("datetimeoffset");
 
@@ -60,6 +67,8 @@ namespace Docket.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("JobID");
+
+                    b.HasIndex("Status", "NextRunUTC", "CreatedAtUTC");
 
                     b.ToTable("Jobs");
                 });

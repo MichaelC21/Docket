@@ -21,6 +21,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddNLog();
 
+builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddDbContext<DocketDBContext>(options =>
 {
     options.UseSqlServer(connectionString);

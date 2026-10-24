@@ -7,8 +7,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
-#Visual Studio
+#Visual Studio (and Code)
 .vs/
+.vscode/
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -64,3 +65,5 @@ nunit-*.xml
 
 # Claude
 .claude/
+
+/scripts/*

@@ -24,7 +24,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddNLog();
 
 builder.Services.AddCoreLayer();
-builder.Services.AddTransient<IDispatcherService, DispatcherService>();
+builder.Services.AddScoped<IDispatcherService, DispatcherService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddDbContext<DocketDBContext>(options =>
 {

@@ -1,5 +1,7 @@
-﻿using Docket.Persistence.Context;
+﻿using Docket.Core;
+using Docket.Persistence.Context;
 using Docket.Worker.Services;
+using Docket.Worker.Services.Interfaces;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,8 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddNLog();
 
+builder.Services.AddCoreLayer();
+builder.Services.AddTransient<IDispatcherService, DispatcherService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddDbContext<DocketDBContext>(options =>
 {

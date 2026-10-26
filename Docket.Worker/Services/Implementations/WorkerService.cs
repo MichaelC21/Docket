@@ -1,8 +1,8 @@
+using Docket.Worker.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Docket.Worker.Services;
 
@@ -11,11 +11,13 @@ public class WorkerService : BackgroundService
     private TimeSpan poll = TimeSpan.FromMilliseconds(5000);
     private ILogger<WorkerService> _logger;
     private IServiceScopeFactory _serviceScopeFactory;
+    private IDispatcherService _dispatcherService;
     private string workerIdentity;
-    public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+    public WorkerService(ILogger<WorkerService> logger, IConfiguration configuration, IServiceScopeFactory serviceScopeFactory, IDispatcherService dispatcherService)
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
+        _dispatcherService = dispatcherService;
 
         var pollInterval = configuration.GetValue<int>("Worker:PollInterval");
         poll = pollInterval <= 0 ?  poll : TimeSpan.FromMilliseconds(pollInterval);
@@ -26,13 +28,16 @@ public class WorkerService : BackgroundService
         while (!cancellationToken.IsCancellationRequested)
         {
             try
-            {
+            {                
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
                 var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
                 var job = await jobService.AcquireJob(workerIdentity, cancellationToken);
                 if (job != null)
                 {
                     _logger.LogInformation("Worker: claimed job {JobId}", job.JobID);
+                    var result = await _dispatcherService.DispatchJob(job.Handler, job.Payload);
+                    
+                    //Do something with the result
                     continue;
                 }
 

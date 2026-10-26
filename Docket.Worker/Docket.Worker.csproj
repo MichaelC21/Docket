@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Docket.Core\Docket.Core.csproj" />
     <ProjectReference Include="..\Docket.Persistence\Docket.Persistence.csproj" />
   </ItemGroup>
 

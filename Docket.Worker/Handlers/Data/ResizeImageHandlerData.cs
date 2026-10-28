@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Docket.Core.Handlers.Data;
+namespace Docket.Worker.Handlers.Data;
 
 public class ResizeImageHandlerData
 {

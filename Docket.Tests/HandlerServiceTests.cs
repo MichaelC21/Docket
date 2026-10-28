@@ -1,5 +1,5 @@
-using Docket.Core.Services;
 using Docket.Tests.Fakes;
+using Docket.Worker.Services;
 using FluentAssertions;
 
 namespace Docket.Tests;

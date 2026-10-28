@@ -1,6 +1,6 @@
 using System;
 
-namespace Docket.Core.Handlers;
+namespace Docket.Worker.Handlers;
 
 public interface IHandler
 {

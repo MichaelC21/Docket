@@ -1,5 +1,4 @@
-﻿using Docket.Core;
-using Docket.Persistence.Context;
+﻿using Docket.Persistence.Context;
 using Docket.Worker.Services;
 using Docket.Worker.Services.Interfaces;
 using DotNetEnv;
@@ -23,7 +22,8 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddNLog();
 
-builder.Services.AddCoreLayer();
+builder.Services.AddSingleton<IHandlerService, HandlerService>();
+builder.Services.AddSingleton<IHandlerRegisterService, HandlerRegisterService>();
 builder.Services.AddScoped<IDispatcherService, DispatcherService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddDbContext<DocketDBContext>(options =>

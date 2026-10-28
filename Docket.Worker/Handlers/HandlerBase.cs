@@ -1,11 +1,11 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Docket.Core.Handlers;
+namespace Docket.Worker.Handlers;
 
 public abstract class HandlerBase<T> : IHandler
 {
-    private T? Data;
+    protected T? Data;
     public abstract Task Execute();
 
     public HandlerBase(string payload)

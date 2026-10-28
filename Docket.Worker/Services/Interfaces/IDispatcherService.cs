@@ -1,5 +1,5 @@
 using System;
-using Docket.Core.Models;
+using Docket.Worker.Models;
 
 namespace Docket.Worker.Services.Interfaces;
 

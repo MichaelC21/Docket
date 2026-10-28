@@ -1,5 +1,5 @@
-using Docket.Core.Models;
-using Docket.Core.Services.Interfaces;
+using Docket.Worker.Models;
+using Docket.Worker.Services.Interfaces;
 
 namespace Docket.Tests.Fakes;
 

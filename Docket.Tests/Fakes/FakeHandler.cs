@@ -1,4 +1,4 @@
-using Docket.Core.Handlers;
+using Docket.Worker.Handlers;
 
 namespace Docket.Tests.Fakes;
 

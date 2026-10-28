@@ -1,7 +1,7 @@
 using System;
-using Docket.Core.Models;
+using Docket.Worker.Models;
 
-namespace Docket.Core.Services.Interfaces;
+namespace Docket.Worker.Services.Interfaces;
 
 public interface IHandlerService
 {

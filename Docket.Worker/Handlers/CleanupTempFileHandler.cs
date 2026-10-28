@@ -1,6 +1,6 @@
 using System;
 
-namespace Docket.Core.Handlers;
+namespace Docket.Worker.Handlers;
 
 public class CleanupTempFileHandler<T> : HandlerBase<T>, IHandler
 {

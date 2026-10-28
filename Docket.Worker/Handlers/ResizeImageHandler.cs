@@ -1,6 +1,6 @@
 using System;
 
-namespace Docket.Core.Handlers;
+namespace Docket.Worker.Handlers;
 
 public class ResizeImageHandler<T> : HandlerBase<T>, IHandler
 {

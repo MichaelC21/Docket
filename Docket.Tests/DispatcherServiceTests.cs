@@ -1,5 +1,5 @@
-using Docket.Core.Models;
 using Docket.Tests.Fakes;
+using Docket.Worker.Models;
 using Docket.Worker.Services;
 using FluentAssertions;
 
@@ -10,7 +10,7 @@ public class DispatcherServiceTests
     [Fact]
     public async Task DispatchJob_DelegatesToHandlerServiceAndReturnsItsOutcome()
     {
-        var expected = new HandlerResult(true, DateTime.Now, "ok");
+        var expected = new HandlerResult(true, DateTimeOffset.UtcNow, "ok");
         var fakeHandlerService = new FakeHandlerService(expected);
         var sut = new DispatcherService(fakeHandlerService);
 

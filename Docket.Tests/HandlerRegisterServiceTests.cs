@@ -1,10 +1,8 @@
 using System;
-using Docket.Core.Entities;
-using Docket.Core.Enums;
-using Docket.Core.Handlers;
-using Docket.Core.Handlers.Data;
-using Docket.Core.Services;
-using Docket.Core.Services.Interfaces;
+using Docket.Worker.Handlers;
+using Docket.Worker.Handlers.Data;
+using Docket.Worker.Services;
+using Docket.Worker.Services.Interfaces;
 using FluentAssertions;
 
 namespace Docket.Tests;
@@ -15,13 +13,13 @@ public class HandlerRegisterServiceTests
 
 
     [Theory]
-    [InlineData(Handler.SendEmailHandler, """{"To":"a@b.com","Subject":"hi"}""", typeof(SendEmailHandler<SendEmailHandlerData>))]
-    [InlineData(Handler.GenerateReportHandler, """{"ReportID":1,"Format":"pdf"}""", typeof(GenerateRepoertHandler<GenerateRepoertHandlerData>))]
-    [InlineData(Handler.CleanupTempFilesHandler, """{"OlderThanDays":7}""", typeof(CleanupTempFileHandler<CleanupTempFileHandlerData>))]
-    [InlineData(Handler.ResizeImageHandler, """{"ImageID":1,"Width":10,"Height":10}""", typeof(ResizeImageHandler<ResizeImageHandlerData>))]
-    public void TestHandlerRegisterService_GetHandler_ReturnsIHandler(Handler handlerType, string payload, Type expectedType)
+    [InlineData("SendEmailHandler", """{"To":"a@b.com","Subject":"hi"}""", typeof(SendEmailHandler<SendEmailHandlerData>))]
+    [InlineData("GenerateReportHandler", """{"ReportID":1,"Format":"pdf"}""", typeof(GenerateReportHandler<GenerateReportHandlerData>))]
+    [InlineData("CleanupTempFileHandler", """{"OlderThanDays":7}""", typeof(CleanupTempFileHandler<CleanupTempFileHandlerData>))]
+    [InlineData("ResizeImageHandler", """{"ImageID":1,"Width":10,"Height":10}""", typeof(ResizeImageHandler<ResizeImageHandlerData>))]
+    public void TestHandlerRegisterService_GetHandler_ReturnsIHandler(string handlerName, string payload, Type expectedType)
     {
-        var handler = _handlerRegisterService.GetHandler(handlerType, payload);
+        var handler = _handlerRegisterService.GetHandler(handlerName, payload);
 
         handler.Should().BeOfType(expectedType);
     }
@@ -29,7 +27,7 @@ public class HandlerRegisterServiceTests
     [Fact]
     public void TestHandlerRegisterService_GetHandlerMissingHandler_ReturnsNull()
     {
-        var handler = _handlerRegisterService.GetHandler((Handler)100, """{"Hello": "World"}""");
+        var handler = _handlerRegisterService.GetHandler("NotARealHandler", """{"Hello": "World"}""");
 
         handler.Should().BeNull();
 

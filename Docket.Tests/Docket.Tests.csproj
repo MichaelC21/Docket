@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.13" />
@@ -29,6 +29,7 @@
     <ProjectReference Include="..\Docket.Core\Docket.Core.csproj" />
     <ProjectReference Include="..\Docket.Persistence\Docket.Persistence.csproj" />
     <ProjectReference Include="..\Docket.Web\Docket.Web.csproj" />
+    <ProjectReference Include="..\Docket.Worker\Docket.Worker.csproj" />
   </ItemGroup>
 
 </Project>

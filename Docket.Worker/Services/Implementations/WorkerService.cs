@@ -1,8 +1,8 @@
+using Docket.Worker.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Docket.Worker.Services;
 
@@ -26,13 +26,18 @@ public class WorkerService : BackgroundService
         while (!cancellationToken.IsCancellationRequested)
         {
             try
-            {
+            {                
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
                 var jobService = scope.ServiceProvider.GetRequiredService<IJobService>();
+                var dispatcherService = scope.ServiceProvider.GetRequiredService<IDispatcherService>();
+
                 var job = await jobService.AcquireJob(workerIdentity, cancellationToken);
                 if (job != null)
                 {
                     _logger.LogInformation("Worker: claimed job {JobId}", job.JobID);
+                    var result = await dispatcherService.DispatchJob(job.Handler, job.Payload);
+                    
+                    //Do something with the result
                     continue;
                 }
 
